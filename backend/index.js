@@ -9,7 +9,7 @@ import bodyParser from 'body-parser';
 
 
 // Importing user route
-import router from './routes/users.js';
+import router from './models/usermodel.js';
 // const router = require('router')
 
 // const bodyParser = require('body-parser')
@@ -25,8 +25,32 @@ const port = 3001
 //This is being tested
 
 app.use(bodyParser.json())
+
+
 // Adding a Router
-app.use('/users', router);
+app.use('/user', router);
+
+//Getting and posting to mongo db
+app.get("/getUsers", (req, res) => {
+    router.find({}, (err,result) => {
+        if(err) {
+            res.json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+app.post("/createUser", async (req, res) => {
+    const user = req.body;
+    const newUser = new router(user);
+    await newUser.save();
+
+    //Send back the user data
+    res.json(user);
+
+});
+
 
 app.get('/', (req, res) => {
     res.send('Hello Universe!')

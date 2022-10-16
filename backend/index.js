@@ -9,7 +9,7 @@ import bodyParser from 'body-parser';
 import userModel from './models/users.js';
 import cors from 'cors';
 // Importing user route
-import router from './models/usermodel.js';
+import router from './models/users.js';
 // const router = require('router')
 
 // const bodyParser = require('body-parser')

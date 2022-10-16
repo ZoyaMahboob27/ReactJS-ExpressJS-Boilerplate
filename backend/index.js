@@ -6,8 +6,8 @@
 //const express = require('express')
 import express from 'express'; // <-- Module Style import
 import bodyParser from 'body-parser';
-
-
+import userModel from './models/users.js';
+import cors from 'cors';
 // Importing user route
 import router from './models/usermodel.js';
 // const router = require('router')
@@ -24,15 +24,17 @@ const app = express()
 const port = 3001
 //This is being tested
 
-app.use(bodyParser.json())
 
 
+//app.use(bodyParser.json())
+app.use(express.json())
 // Adding a Router
-app.use('/user', router);
+app.use('/users', router);
+app.use(cors());
 
-//Getting and posting to mongo db
+
 app.get("/getUsers", (req, res) => {
-    router.find({}, (err,result) => {
+    userModel.find({}, (err,result) => {
         if(err) {
             res.json(err);
         } else {
@@ -41,9 +43,14 @@ app.get("/getUsers", (req, res) => {
     });
 });
 
+// app.post('/', (req, res) => {
+//     console.log(req.body)
+//     res.send('Posting a Request')
+// })
+
 app.post("/createUser", async (req, res) => {
     const user = req.body;
-    const newUser = new router(user);
+    const newUser = new userModel(user);
     await newUser.save();
 
     //Send back the user data
@@ -52,18 +59,6 @@ app.post("/createUser", async (req, res) => {
 });
 
 
-app.get('/', (req, res) => {
-    res.send('Hello Universe!')
-})
-
-app.get('/todos', (req, res) => {
-    res.send('A list of todo items will be returned')
-})
-
-app.post('/', (req, res) => {
-    console.log(req.body)
-    res.send('Posting a Request')
-})
 
 app.listen(port, () => {
     console.log(`Server is running on the ${port} nya~`)
